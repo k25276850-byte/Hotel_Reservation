@@ -1,0 +1,83 @@
+import sys
+
+tax_rate = 0.14
+service_charge = 0.05
+
+offerings = {
+    "101": {"name": "Standard Double Room", "price": 120.0},
+    "102": {"name": "Executive Suite", "price": 250.0},
+    "103": {"name": "Presidential Suite", "price": 500.0},
+    "201": {"name": "Buffet Breakfast", "price": 25.0},
+    "202": {"name": "Spa and Massage", "price": 80.0},
+    "203": {"name": "Airport Transfer", "price": 40.0}
+}
+
+def main():
+    reservation_list = []
+    
+    while True:
+        print("\n" + "="*45)
+        print("   SMART HOTEL SYSTEM - MAIN MENU")
+        print("="*45)
+        print("1. View Offerings")
+        print("2. Add to Reservation")
+        print("3. View Current Reservation")
+        print("4. Print Final Folio")
+        print("5. Exit")
+        print("="*45)
+        
+        choice = input("Select (1-5): ").strip()
+        
+        if choice == '1':
+            print("\n--- Available Offerings ---")
+            print(f"{'ID':<8} {'Service Name':<25} {'Price':<10}")
+            print("-" * 45)
+            for code, details in offerings.items():
+                print(f"{code:<8} {details['name']:<25} ${details['price']:.2f}")
+                
+        elif choice == '2':
+            item_code = input("\nEnter ID to add: ").strip()
+            if item_code in offerings:
+                reservation_list.append(offerings[item_code])
+                print(f"Added: {offerings[item_code]['name']}")
+            else:
+                print("Error: Invalid ID.")
+                
+        elif choice == '3':
+            if not reservation_list:
+                print("\nReservation is empty.")
+            else:
+                print("\n--- Current Reservation ---")
+                for i, item in enumerate(reservation_list, 1):
+                    print(f"{i}. {item['name']} - ${item['price']:.2f}")
+                    
+        elif choice == '4':
+            if not reservation_list:
+                print("\nNothing to bill.")
+                continue
+                
+            subtotal = sum(item['price'] for item in reservation_list)
+            tax = subtotal * tax_rate
+            service = subtotal * service_charge
+            total = subtotal + tax + service
+            
+            print("\n" + "*"*45)
+            print("           FINAL BILL")
+            print("*"*45)
+            for item in reservation_list:
+                print(f"{item['name']:<30} ${item['price']:>10.2f}")
+            print("-" * 45)
+            print(f"{'Subtotal:':<30} ${subtotal:>10.2f}")
+            print(f"{'Tax (14%):':<30} ${tax:>10.2f}")
+            print(f"{'Service (5%):':<30} ${service:>10.2f}")
+            print("=" * 45)
+            print(f"{'GRAND TOTAL:':<30} ${total:>10.2f}")
+            print("=" * 45)
+            
+        elif choice == '5':
+            sys.exit()
+        else:
+            print("Invalid Choice.")
+
+if __name__ == "__main__":
+    main()
